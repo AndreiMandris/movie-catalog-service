@@ -27,7 +27,7 @@ public class MovieCatalogResource {
     private WebClient.Builder webClientBuilder;
 
     @GetMapping("/{userId}")
-    public List<CatalogItem> getCatalog(@PathVariable String userId){
+    public List<CatalogItem> getCatalog(@PathVariable String userId) {
 
         List<Rating> ratings = Arrays.asList(
                 new Rating("1", 4),
@@ -38,17 +38,18 @@ public class MovieCatalogResource {
                 .collect(Collectors.toList());
     }
 
-    private CatalogItem createItem(Rating rating){
+    private CatalogItem createItem(Rating rating) {
 //        Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
 
         Movie movie = webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8082/movies/")
+                .uri("http://localhost:8082/movies/" + rating.getMovieId())
                 .retrieve()
                 .bodyToMono(Movie.class)
                 .block();
 
         return new CatalogItem(movie.getName(), "test", rating.getRating());
     }
+}
 
 
